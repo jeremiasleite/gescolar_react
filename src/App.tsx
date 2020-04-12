@@ -1,25 +1,27 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Layout from './components/Layout';
+import { useSelector, useDispatch } from 'react-redux';
+import { ApplicationState } from '../src/store';
+import { addItem } from './store/ducks/repositories/actions';
 
-function App() {
+
+const App: React.FC=()=> {
+  const rep = useSelector((state: ApplicationState) => state.repositories);
+  const dispatch = useDispatch();
+  
+  function add(){
+    dispatch(addItem({id: 4, name: 'sandrelynn'}))
+  }
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Layout>
+      <h1>{rep.data.map(item => <li key={item.id}>{item.name}</li>)}</h1>
+      <button type="button" onClick={add}>
+        Adicionar
+  </button>
+      
+    </Layout>
+    
   );
 }
 
