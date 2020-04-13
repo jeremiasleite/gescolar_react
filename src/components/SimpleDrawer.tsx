@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -9,13 +9,15 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
+import { Link, useLocation } from "react-router-dom";
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'flex',
-    },    
+    },
     drawer: {
       width: drawerWidth,
       flexShrink: 0,
@@ -29,8 +31,22 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function ClippedDrawer() {
+const SimpleDrawer: React.FC = (props) => {
   const classes = useStyles();
+
+  const [path, setPath] = useState("");
+
+  let location = useLocation();
+
+  useEffect(() => {
+    setPath(location.pathname);    
+  }, [location, setPath]);
+
+  const activetRoute = (route:string) => {
+    console.log(route, path);
+    return route === path;
+  }
+  
   return (
     <div className={classes.root}>
       <Drawer
@@ -42,7 +58,13 @@ export default function ClippedDrawer() {
       >
         <Toolbar />
         <div className={classes.drawerContainer}>
-          <List>
+          <List >
+            <ListItem button component={Link} to="/" selected={activetRoute('/')}>
+              <ListItemIcon>
+                <InboxIcon />
+              </ListItemIcon>
+              <ListItemText primary={'Home'} />
+            </ListItem>
             {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
               <ListItem button key={text}>
                 <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
@@ -52,15 +74,17 @@ export default function ClippedDrawer() {
           </List>
           <Divider />
           <List>
-            {['All mail', 'Trash', 'Spam'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
+            <ListItem button component={Link} to="/configuracao" selected={activetRoute("/configuracao")}>
+              <ListItemIcon>
+                <InboxIcon />
+              </ListItemIcon>
+              <ListItemText primary={'Configuração'} />
+            </ListItem>
           </List>
         </div>
       </Drawer>
     </div>
   );
 }
+
+export default SimpleDrawer;
