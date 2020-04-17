@@ -1,9 +1,10 @@
 import React from 'react';
-import Layout from './components/Layout';
 import { useSelector } from 'react-redux';
 import { ApplicationState } from '../src/store';
+import { BrowserRouter as Router } from "react-router-dom";
 
 import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import Routes from './routes';
 
 const App: React.FC = () => {	
 	const prefersDarkMode = useSelector((state: ApplicationState) => state.themes.data);
@@ -20,7 +21,9 @@ const App: React.FC = () => {
 
 	return (
 		<ThemeProvider theme={theme}>
-			<Layout/>
+			<Router>
+				<Routes/>
+			</Router>			
 		</ThemeProvider>
 	);
 }

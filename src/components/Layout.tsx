@@ -5,8 +5,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import SimpleDrawer from './SimpleDrawer';
 import MyAppBar from './MyAppBar';
 import { Toolbar } from '@material-ui/core';
-import { BrowserRouter as Router } from "react-router-dom";
-import Routes from '../routes';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -25,16 +23,13 @@ const Layout: React.FC = (props) => {
 
   return (
     <div className={classes.root}>
-      <CssBaseline />
-      <Router>
+      <CssBaseline />      
         <MyAppBar />
         <SimpleDrawer />
         <Toolbar />
         <main className={classes.content}>
-          <Routes/>
+          {props.children}
         </main>
-      </Router>
-
     </div>
   );
 }

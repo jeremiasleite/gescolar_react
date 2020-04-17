@@ -7,9 +7,17 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import { Link, useLocation } from "react-router-dom";
+import HomeIcon from '@material-ui/icons/Home';
+import SettingsIcon from '@material-ui/icons/Settings';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+//import PersonAddIcon from '@material-ui/icons/PersonAdd';
+//import InboxIcon from '@material-ui/icons/MoveToInbox';
+//import MailIcon from '@material-ui/icons/Mail';
+import PeopleIcon from '@material-ui/icons/People';
+
+import Profile from './SideBar/components/Profile';
+import { Grid } from '@material-ui/core';
 
 const drawerWidth = 240;
 
@@ -27,9 +35,23 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     drawerContainer: {
       overflow: 'auto',
-    }
+    },
+    large: {
+      width: theme.spacing(7),
+      height: theme.spacing(7),
+    },
+    divider: {
+      margin: theme.spacing(2, 0)
+    },
   }),
 );
+
+interface Page {
+  title: string,
+  href: string,
+  icon: any
+}
+
 
 const SimpleDrawer: React.FC = (props) => {
   const classes = useStyles();
@@ -39,14 +61,36 @@ const SimpleDrawer: React.FC = (props) => {
   let location = useLocation();
 
   useEffect(() => {
-    setPath(location.pathname);    
+    setPath(location.pathname);
   }, [location, setPath]);
 
-  const activetRoute = (route:string) => {
-    console.log(route, path);
+  const activetRoute = (route: string) => {
     return route === path;
   }
-  
+
+  const pages: Page[] = [
+    {
+      title: 'Início',
+      href: '/',
+      icon: <HomeIcon />
+    },
+    {
+      title: 'Usuário',
+      href: '/usuarios',
+      icon: <PeopleIcon/>
+    },
+    {
+      title: 'Configurações',
+      href: '/configuracao',
+      icon: <SettingsIcon />
+    },
+    {
+      title: 'Sair',
+      href: '/login',
+      icon: <ExitToAppIcon />
+    }
+  ]
+
   return (
     <div className={classes.root}>
       <Drawer
@@ -58,28 +102,22 @@ const SimpleDrawer: React.FC = (props) => {
       >
         <Toolbar />
         <div className={classes.drawerContainer}>
+          <Grid container direction="row" justify='center'>
+            <Grid item xs={6}>
+              <Profile />
+            </Grid>
+          </Grid>
+          <Divider className={classes.divider} />
           <List >
-            <ListItem button component={Link} to="/" selected={activetRoute('/')}>
-              <ListItemIcon>
-                <InboxIcon />
-              </ListItemIcon>
-              <ListItemText primary={'Home'} />
-            </ListItem>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
+            {pages.map((item, index) => (
+              <ListItem button component={Link} to={item.href} selected={activetRoute(item.href)}>
+                <ListItemIcon>
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText primary={item.title} />
               </ListItem>
             ))}
-          </List>
-          <Divider />
-          <List>
-            <ListItem button component={Link} to="/configuracao" selected={activetRoute("/configuracao")}>
-              <ListItemIcon>
-                <InboxIcon />
-              </ListItemIcon>
-              <ListItemText primary={'Configuração'} />
-            </ListItem>
+
           </List>
         </div>
       </Drawer>
